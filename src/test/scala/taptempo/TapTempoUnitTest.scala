@@ -21,7 +21,7 @@ class TapTempoTester extends ChiselFlatSpec {
   behavior of "TapTempoTester"
 
   it should "launch a simple test" in {
-    chisel3.iotesters.Driver(() => new TapTempo) {
+    chisel3.iotesters.Driver(() => new TapTempo()) {
       c => new TapTempoUnitTester(c)
     } should be(true)
   }
