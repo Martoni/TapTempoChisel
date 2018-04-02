@@ -16,32 +16,33 @@ class TapTempoUnitTester(t: TapTempo) extends PeekPokeTester(t) {
    poke(button, 0)
   }
 
-  val tclk = 10
-  val tus = 1000/tclk
+  val tps = 1000
+  val tclk = 10*tps
+  val tus = 1000*tps/tclk
   val tms = 1000*tus
   val ts = 1000*tms
 
   //0
   pushbutton(tptmp.io.button)
-  step(2*tus)
+  step(2*tms)
   //1
   pushbutton(tptmp.io.button)
-  step(1*tus)
+  step(1*tms)
   //2
   pushbutton(tptmp.io.button)
-  step(1*tus)
+  step(1*tms)
   //3
   pushbutton(tptmp.io.button)
-  step(1*tus)
+  step(1*tms)
   //4
   pushbutton(tptmp.io.button)
-  step(1*tus)
+  step(1*tms)
   //5
   pushbutton(tptmp.io.button)
-  step(1*tus)
+  step(1*tms)
   //6
   pushbutton(tptmp.io.button)
-  step(1*tus)
+  step(1*tms)
 
 }
 

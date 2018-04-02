@@ -1,17 +1,18 @@
 package taptempo
 
 import chisel3._
-import chisel3.util.Counter
-import scala.language.reflectiveCalls
+import chisel3.util.{Counter, PriorityEncoder}
+import scala.language.reflectiveCalls  //avoid reflective call warnings
 import scala.math.pow
 
 class TapTempo(tclk_ns: Int = 10) extends Module {
   val io = IO(new Bundle {
-    val bpm = Output(UInt(8.W))
+//    val bpm = Output(UInt(8.W))
+    val bpm = Output(UInt(270.W))
     val button = Input(Bool())
   })
   /* Constant parameters */
-  val MINUTE_NS = 60*1000*1000*1000
+  val MINUTE_NS = 60*1000*1000*1000L
   val PULSE_NS = 1000*1000
 
   /* usefull function */
@@ -23,19 +24,16 @@ class TapTempo(tclk_ns: Int = 10) extends Module {
   val countx = RegInit(Vec(Seq.fill(4)(0.asUInt(16.W))))
   val count_mux = RegInit(0.asUInt(2.W))
   val sum = Wire(UInt(19.W))
-  val sum_by_4 = sum(19, 3)
 
-  val x = Seq.tabulate(pow(2,16).toInt-1)
-                  (n => UInt((MINUTE_NS/PULSE_NS)/(n+1))))
-
+  /* div array calculation */
+  val x = Seq.tabulate(pow(2,16).toInt-1)(n => ((MINUTE_NS/PULSE_NS)/(n+1)).U)
   val bpm_calc = Vec(Seq.tabulate(270)(n => x(n+1)))
+  val bpm_ineq = RegInit(Vec(Seq.fill(270)(0.asUInt(1.W))))
 
-  val bpm_ineq = RegInit(1.asUInt(270.W))
-
-  for(i <- 0 to 270) {
-    bpm_ineq(i) := 
+  val sum_by_4 = sum(18, 2)
+  for(i <- 0 to 269) {
+    bpm_ineq(i) := Mux(sum_by_4 < bpm_calc(i), 1.U, 0.U)
   }
-
 
   when(timepulse) {
     tp_count := tp_count + 1.U
@@ -48,5 +46,5 @@ class TapTempo(tclk_ns: Int = 10) extends Module {
 
   sum := countx(0) + countx(1) + countx(2) + countx(3)
 
-  io.bpm := sum(11, 3)
+  io.bpm := bpm_ineq(0)
 }
