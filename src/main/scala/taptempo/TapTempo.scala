@@ -5,7 +5,8 @@ import chisel3.util.{Counter, PriorityEncoder}
 import scala.language.reflectiveCalls  //avoid reflective call warnings
 import scala.math.pow
 
-class TapTempo(tclk_ns: Int = 10) extends Module {
+// default clock 100Mhz -> T = 10ns
+class TapTempo(var tclk_ns: Int = 10) extends Module {
   val io = IO(new Bundle {
 //    val bpm = Output(UInt(8.W))
     val bpm = Output(UInt(270.W))
