@@ -27,8 +27,8 @@ class TapTempo(var tclk_ns: Int = 10) extends Module {
   val sum = Wire(UInt(19.W))
 
   /* div array calculation */
-  val x = Seq.tabulate(pow(2,16).toInt-1)(n => ((MINUTE_NS/PULSE_NS)/(n+1)).U)
-  val bpm_calc = Vec(Seq.tabulate(270)(n => x(n+1)))
+  val x = Seq.tabulate(pow(2,16).toInt-1)(n => ((MINUTE_NS/PULSE_NS/tclk_ns)/(n+1)).U)
+  val bpm_calc = RegInit(Vec(Seq.tabulate(270)(n => x(n+1))))
   val bpm_ineq = RegInit(Vec(Seq.fill(270)(0.asUInt(1.W))))
 
   val sum_by_4 = sum(18, 2)
@@ -47,5 +47,6 @@ class TapTempo(var tclk_ns: Int = 10) extends Module {
 
   sum := countx(0) + countx(1) + countx(2) + countx(3)
 
-  io.bpm := bpm_ineq(0)
+//  io.bpm := bpm_ineq.asUInt()
+  io.bpm := bpm_calc(269).asUInt()
 }
