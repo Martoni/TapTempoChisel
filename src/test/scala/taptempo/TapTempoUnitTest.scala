@@ -1,16 +1,20 @@
 package taptempo
 
-import chisel3._
+import chisel3.Bool
 import chisel3.iotesters
 import chisel3.iotesters.{ChiselFlatSpec, Driver, PeekPokeTester}
 import scala.language.reflectiveCalls
 
 class TapTempoUnitTester(t: TapTempo) extends PeekPokeTester(t) {
-  private val tptmp = t
+  val tptmp = t
+
+
+  printf("Begin of test\n")
 
   def pushbutton(button: Bool) {
    poke(button, 0)
    step(1)
+   print("Push \n")
    poke(button, 1)
    step(10)
    poke(button, 0)
