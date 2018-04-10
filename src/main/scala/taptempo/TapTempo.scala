@@ -6,7 +6,7 @@ import scala.language.reflectiveCalls  //avoid reflective call warnings
 import scala.math.pow
 
 // default clock 100Mhz -> T = 10ns
-class TapTempo(var tclk_ns: Int = 10) extends Module {
+class TapTempo(tclk_ns: Int) extends Module {
   val io = IO(new Bundle {
 //    val bpm = Output(UInt(8.W))
     val bpm = Output(UInt(270.W))
@@ -15,6 +15,7 @@ class TapTempo(var tclk_ns: Int = 10) extends Module {
   /* Constant parameters */
   val MINUTE_NS = 60*1000*1000*1000L
   val PULSE_NS = 1000*1000
+  val TCLK_NS = tclk_ns
 
   /* usefull function */
   def risingedge(x: Bool) = x && !RegNext(x)
@@ -27,7 +28,7 @@ class TapTempo(var tclk_ns: Int = 10) extends Module {
   val sum = Wire(UInt(19.W))
 
   /* div array calculation */
-  val x = Seq.tabulate(pow(2,16).toInt-1)(n => ((MINUTE_NS/PULSE_NS/tclk_ns)/(n+1)).U)
+  val x = Seq.tabulate(pow(2,16).toInt-1)(n => ((MINUTE_NS/PULSE_NS)/(n+1)).U)
   val bpm_calc = RegInit(Vec(Seq.tabulate(270)(n => x(n+1))))
   val bpm_ineq = RegInit(Vec(Seq.fill(270)(0.asUInt(1.W))))
 
@@ -47,6 +48,6 @@ class TapTempo(var tclk_ns: Int = 10) extends Module {
 
   sum := countx(0) + countx(1) + countx(2) + countx(3)
 
-//  io.bpm := bpm_ineq.asUInt()
-  io.bpm := bpm_calc(269).asUInt()
+  io.bpm := bpm_ineq.asUInt()
+//  io.bpm := bpm_calc(269).asUInt()
 }

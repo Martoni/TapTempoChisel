@@ -16,9 +16,10 @@ class TapTempoUnitTester(t: TapTempo) extends PeekPokeTester(t) {
    poke(button, 0)
   }
 
-  tptmp.tclk_ns = 100000
 
-  val tclk = tptmp.tclk_ns //ns
+  val tclk = tptmp.TCLK_NS //ns
+
+  printf("tclk %d\n", tclk)
 
   val tms = 10*tclk
   val ts = 1000*tms
@@ -29,15 +30,6 @@ class TapTempoUnitTester(t: TapTempo) extends PeekPokeTester(t) {
     step(1*tms)
   }
 
-}
+  printf("End of Test %d\n", ts)
 
-
-class TapTempoTester extends ChiselFlatSpec {
-  behavior of "TapTempoTester"
-
-  it should "launch a simple test" in {
-    chisel3.iotesters.Driver(() => new TapTempo()) {
-      c => new TapTempoUnitTester(c)
-    } should be(true)
-  }
 }
