@@ -31,7 +31,7 @@ class TapTempoUnitTester(t: TapTempo) extends PeekPokeTester(t) {
   for(i <- 0 to 6) {
     peek(tptmp.io.button)
     pushbutton(tptmp.io.button)
-    step(1*tms)
+    step(10000)
   }
 
   printf("End of Test %d\n", ts)

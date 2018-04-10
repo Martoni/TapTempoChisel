@@ -1,7 +1,7 @@
 package taptempo
 
 import chisel3._
-import chisel3.util.{Counter, PriorityEncoder}
+import chisel3.util.{Counter, PriorityEncoder, Reverse}
 import scala.language.reflectiveCalls  //avoid reflective call warnings
 import scala.math.pow
 
@@ -9,7 +9,8 @@ import scala.math.pow
 class TapTempo(tclk_ns: Int) extends Module {
   val io = IO(new Bundle {
 //    val bpm = Output(UInt(8.W))
-    val bpm = Output(UInt(270.W))
+    val bpm = Output(UInt(9.W))
+    val debug = Output(UInt(270.W))
     val button = Input(Bool())
   })
   /* Constant parameters */
@@ -23,7 +24,7 @@ class TapTempo(tclk_ns: Int) extends Module {
   val tp_count = RegInit(0.asUInt(16.W))
   val (pulsecount, timepulse) = Counter(true.B, PULSE_NS/tclk_ns)
 
-  val countx = RegInit(Vec(Seq.fill(4)(0.asUInt(16.W))))
+  val countx = RegInit(Vec(Seq.fill(4)(0.asUInt(19.W))))
   val count_mux = RegInit(0.asUInt(2.W))
   val sum = Wire(UInt(19.W))
 
@@ -48,6 +49,7 @@ class TapTempo(tclk_ns: Int) extends Module {
 
   sum := countx(0) + countx(1) + countx(2) + countx(3)
 
-  io.bpm := bpm_ineq.asUInt()
+  io.debug := Reverse(bpm_ineq.asUInt())
+  io.bpm := PriorityEncoder(Reverse(bpm_ineq.asUInt()))
 //  io.bpm := bpm_calc(269).asUInt()
 }
