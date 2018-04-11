@@ -22,7 +22,7 @@ import chisel3._
   * }}}
   */
 object TapTempoMain extends App {
-  iotesters.Driver.execute(args, () => new TapTempo(100000)) {
+  iotesters.Driver.execute(args, () => new TapTempo(tclk_ns = 100000)) {
     c => new TapTempoUnitTester(c)
   }
 }
