@@ -26,7 +26,7 @@ def javacOptionsVersion(scalaVersion: String): Seq[String] = {
 
 name := "TapTempo"
 
-version := "3.0.0"
+version := "3.1.0"
 
 scalaVersion := "2.11.11"
 
@@ -39,8 +39,8 @@ resolvers ++= Seq(
 
 // Provide a managed dependency on X if -DXVersion="" is supplied on the command line.
 val defaultVersions = Map(
-  "chisel3" -> "3.0.+",
-  "chisel-iotesters" -> "1.1.+"
+  "chisel3" -> "3.1.0",
+  "chisel-iotesters" -> "1.1.0"
   )
 
 libraryDependencies ++= (Seq("chisel3","chisel-iotesters").map {
@@ -48,7 +48,6 @@ libraryDependencies ++= (Seq("chisel3","chisel-iotesters").map {
 
 scalacOptions ++= scalacOptionsVersion(scalaVersion.value)
 
-scalacOptions += "-feature" 
-scalacOptions += "-deprecation" 
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature")
 
 javacOptions ++= javacOptionsVersion(scalaVersion.value)
