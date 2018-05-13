@@ -26,7 +26,7 @@ class TapTempo(tclk_ns: Int, bpm_max: Int = 270) extends Module {
 
   val countx = RegInit(VecInit(Seq.fill(4)(0.asUInt(19.W))))
   val count_mux = RegInit(0.asUInt(2.W))
-  val sum = Wire(UInt(19.W))
+  val sum = RegInit(0.asUInt(19.W))
 
   /* div array calculation */
   val x = Seq.tabulate(pow(2,16).toInt-1)(n => ((MINUTE_NS/PULSE_NS)/(n+1)).U)
