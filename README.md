@@ -17,7 +17,16 @@ sbt 'test:runMain taptempo.TapTempoMain --backend-name verilator'
 
 First generate verilog:
 ```sh
-sbt runMain taptempo.APF27TapTempoDriver
+sbt 'runMain taptempo.APF27TapTempoDriver'
 ```
 
-Then add file to ise project
+Then add file to ise project.
+
+
+```sh
+tftpboot ${loadaddr} APF27TapTempo.bit
+fpga load 0 ${loadaddr}
+md.w C8000000
+```
+
+

@@ -1,9 +1,8 @@
-package taptempoplatform
+package taptempo
 
 import chisel3._
 import chisel3.util.{ShiftRegister, Cat}
 import scala.language.reflectiveCalls  //avoid reflective call warnings
-import taptempo.{TapTempo}
 
 class APF27TapTempo extends Module {
   val io = IO(new Bundle {
@@ -28,7 +27,7 @@ class APF27TapTempo extends Module {
   }.otherwise {
     when(risingedge(button_s) || fallingedge(button_s)){
       debcounter := 0.U
-      button_deb := button_s 
+      button_deb := button_s
     }
   }
 
